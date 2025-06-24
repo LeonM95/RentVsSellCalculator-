@@ -1,640 +1,194 @@
+/* =======================================================================
+ *  app.js – Rent vs Sell (matches RLPMG calculator 1-for-1)
+ * =====================================================================*/
 "use strict";
 
-//  UI inputs
-//  UI inputs
-const formInputs = document.getElementById("formInputs");
-const yearsSliderRange = document.getElementById("yearsSliderRange");
-const years_graphic_results = document.getElementById("years_graphic_results");
-const summary_rent_out = document.getElementById("summary_rent_out");
-const summary_sell_out = document.getElementById("summary_sell_out");
-const summary_dif_wealth = document.getElementById("summary_dif_wealth");
-const yearsSliderLabel = document.getElementById("yearsSliderLabel");
-const btnExportPDF = document.getElementById("exportBtn");
-const homeValueInput = document.getElementById("homeValueInput");
-console.log(homeValueInput.value);
-const pricePaidInput = document.getElementById("pricePaidInput");
-console.log(pricePaidInput.value);
-const originalMortgageInput = document.getElementById("originalMortgageInput");
-console.log(originalMortgageInput.value);
-const mortgageBalanceInput = document.getElementById("mortgageBalanceInput");
-console.log(mortgageBalanceInput.value);
-const interestRateInput = document.getElementById("interestRateInput");
-console.log(interestRateInput.value);
-const mortgagePaymentInput = document.getElementById("mortgagePaymentInput");
-console.log(`Morrtgare payment/monthy ${mortgagePaymentInput.value}`);
-const propertyTaxesInput = document.getElementById("propertyTaxesInput");
-console.log(propertyTaxesInput.value);
-const homeownersInsuranceInput = document.getElementById(
-  "homeownersInsuranceInput"
-);
-console.log(homeownersInsuranceInput.value);
-const monthlyRentInput = document.getElementById("monthlyRentInput");
-console.log(monthlyRentInput.value);
-const appreciationRateInput = document.getElementById("appreciationRateInput");
-console.log(appreciationRateInput.value);
-const yearsToHoldRange = document.getElementById("yearsToHoldRange");
-console.log(`years hold ${yearsToHoldRange.value}`);
-const yearsToHoldLabel = document.getElementById("yearsToHoldLabel");
-const primaryResidenceCheckbox = document.getElementById(
-  "primaryResidenceCheckbox"
-);
-// Advance inputs
-// Advance inputs
-const MakeReadyCostsInput = document.getElementById("MakeReadyCostsInput");
-const annualMaintenanceCostsInput = document.getElementById(
-  "annualMaintenanceCostsInput"
-);
-console.log(annualMaintenanceCostsInput.value);
-const annualMaintenanceCostsRange = document.getElementById(
-  "annualMaintenanceCostsRange"
-);
-const annualMaintenanceCostsLabel = document.getElementById(
-  "annualMaintenanceCostsLabel"
-);
-const RefurbishingCostsSellInput = document.getElementById(
-  "RefurbishingCostsSellInput"
-);
-console.log(RefurbishingCostsSellInput.value);
-const btn30years = document.getElementById("btn30years");
-const btn15years = document.getElementById("btn15years");
-const btnCustom = document.getElementById("btnCustom");
-const mortgageTermCustomInput = document.getElementById(
-  "mortgageTermCustomInput"
-);
-console.log(mortgageTermCustomInput.value);
-const propertyManagementFeeInput = document.getElementById(
-  "propertyManagementFeeInput"
-);
-console.log(propertyManagementFeeInput.value);
-const propertyManagementFeePercent = document.getElementById(
-  "propertyManagementFeePercent"
-);
-console.log(`$ ${propertyManagementFeePercent.value}`);
-const annualVacancyRateInput = document.getElementById(
-  "annualVacancyRateInput"
-);
-console.log(annualVacancyRateInput.value);
-const annualVacancyRateRange = document.getElementById(
-  "annualVacancyRateRange"
-);
-const annualVacancyRateLabel = document.getElementById(
-  "annualVacancyRateLabel"
-);
-const capitalExpendituresInput = document.getElementById(
-  "capitalExpendituresInput"
-);
-console.log(capitalExpendituresInput.value);
-const capitalExpendituresRange = document.getElementById(
-  "capitalExpendituresRange"
-);
-const capitalExpendituresLabel = document.getElementById(
-  "capitalExpendituresLabel"
-);
-const capitalExpendituresChecbox = document.getElementById(
-  "capitalExpendituresChecbox"
-);
-const annualRentChangeInput = document.getElementById("annualRentChangeInput");
-console.log(annualRentChangeInput.value);
-const annualRentChangeRange = document.getElementById("annualRentChangeRange");
-const annualRentChangeLabel = document.getElementById("annualRentChangeLabel");
-const realtorCommissionInput = document.getElementById(
-  "realtorCommissionInput"
-);
-console.log(realtorCommissionInput.value);
-const realtorCommissionRange = document.getElementById(
-  "realtorCommissionRange"
-);
-const realtorCommissionlabel = document.getElementById(
-  "realtorCommissionlabel"
-);
-const closingCostsInputs = document.getElementById("closingCostsInputs");
-console.log(closingCostsInputs.value);
-const closingCostsRange = document.getElementById("closingCostsRange");
-const closingCostsLabel = document.getElementById("closingCostsLabel");
-const incomeTaxRateInput = document.getElementById("incomeTaxRateInput");
-console.log(incomeTaxRateInput.value);
-const incomeTaxRateRange = document.getElementById("incomeTaxRateRange");
-const incomeTaxRateLabel = document.getElementById("incomeTaxRateLabel");
-const capitalGainsTaxRateInput = document.getElementById(
-  "capitalGainsTaxRateInput"
-);
-console.log(capitalGainsTaxRateInput.value);
-const capitalGainsTaxRateRange = document.getElementById(
-  "capitalGainsTaxRateRange"
-);
-const capitalGainsTaxRateLabel = document.getElementById(
-  "capitalGainsTaxRateLabel"
-);
-const AfterTaxReinvestmentRateInput = document.getElementById(
-  "AfterTaxReinvestmentRateInput"
-);
-console.log(AfterTaxReinvestmentRateInput.value);
-const AfterTaxReinvestmentRateRange = document.getElementById(
-  "AfterTaxReinvestmentRateRange"
-);
-const AfterTaxReinvestmentRateLabel = document.getElementById(
-  "AfterTaxReinvestmentRateLabel"
-);
+/* ── mini helper ────────────────────────────────────────────────────── */
+const $   = id => document.getElementById(id);
+const pct = x  => (x >= 1 ? x / 100 : x);               // 6 → 0.06
+const $f  = n  => "$" + Math.round(n).toLocaleString(); // 12345 → $12,345
 
-// To diplay value of range in inputs
-// To diplay value of range in inputs
+/* ── elements we read/write ─────────────────────────────────────────── */
+const tbody = document.querySelector("table tbody");
+const form  = $("formInputs");
 
-formInputs.addEventListener("submit", function (e) {
-  e.preventDefault();
-});
+const outRent = $("summary_rent_out");
+const outSell = $("summary_sell_out");
+const outDiff = $("summary_dif_wealth");
 
-yearsSliderRange.addEventListener("input", () => {
-  const value = yearsSliderRange.value;
-  yearsSliderLabel.textContent = value;
-  console.log("yes");
-  years_graphic_results.textContent = value;
-});
+/* link every slider <input type=range> with its numeric <input> + label */
+document.querySelectorAll("[data-range]")
+  .forEach(r => r.addEventListener("input", () => {
+    const t = $(r.dataset.range);   if (t) t.value = r.value;
+    const l = $(r.dataset.label);   if (l) l.textContent = r.value;
+  }));
 
-yearsToHoldRange.addEventListener("input", () => {
-  const value = yearsToHoldRange.value;
-  yearsToHoldLabel.textContent = value;
-});
+/* =======================================================================
+ *  1.  FINANCIAL LOGIC  (exactly mirrors rlpmg.com)
+ * =====================================================================*/
 
-annualMaintenanceCostsRange.addEventListener("input", () => {
-  const value = annualMaintenanceCostsRange.value;
-  annualMaintenanceCostsInput.value = value;
-  annualMaintenanceCostsLabel.textContent = value;
-});
+/* annual collected rent (after vacancy) */
+const rentYear = (yr,p)=>
+  p.monthlyRent*12*(1-p.vacancy)*(1+p.rentGrowth)**(yr-1);
 
-annualVacancyRateRange.addEventListener("input", () => {
-  const value = annualVacancyRateRange.value;
-  annualVacancyRateInput.value = value;
-  annualVacancyRateLabel.textContent = value;
-});
-
-capitalExpendituresRange.addEventListener("input", () => {
-  const value = capitalExpendituresRange.value;
-  capitalExpendituresInput.value = value;
-  capitalExpendituresLabel.textContent = value;
-});
-
-annualRentChangeRange.addEventListener("input", () => {
-  const value = annualRentChangeRange.value;
-  annualRentChangeInput.value = value;
-  annualRentChangeLabel.textContent = value;
-});
-
-realtorCommissionRange.addEventListener("input", () => {
-  const value = realtorCommissionRange.value;
-  realtorCommissionInput.value = value;
-  realtorCommissionlabel.textContent = value;
-});
-
-closingCostsRange.addEventListener("input", () => {
-  const value = closingCostsRange.value;
-  closingCostsInputs.value = value;
-  closingCostsLabel.textContent = value;
-});
-
-incomeTaxRateRange.addEventListener("input", () => {
-  const value = incomeTaxRateRange.value;
-  incomeTaxRateInput.value = value;
-  incomeTaxRateLabel.textContent = value;
-});
-
-capitalGainsTaxRateRange.addEventListener("input", () => {
-  const value = capitalGainsTaxRateRange.value;
-  capitalGainsTaxRateInput.value = value;
-  capitalGainsTaxRateLabel.textContent = value;
-});
-
-AfterTaxReinvestmentRateRange.addEventListener("input", () => {
-  const value = AfterTaxReinvestmentRateRange.value;
-  AfterTaxReinvestmentRateInput.value = value;
-  AfterTaxReinvestmentRateLabel.textContent = value;
-});
-
-// Export to PDF
-// Export to PDF
-// Export to PDF
-
-btnExportPDF.addEventListener("click", function () {
-  try {
-    // Optional: Add loading state
-    this.textContent = "Preparing PDF...";
-    this.disabled = true;
-
-    // Store original title
-    const originalTitle = document.title;
-
-    // Set descriptive title
-    document.title =
-      "Rent vs Sell Analysis - " + new Date().toLocaleDateString();
-
-    // Trigger print
-    window.print();
-
-    // Reset button and title
-    setTimeout(() => {
-      document.title = originalTitle;
-      this.textContent = "Export as PDF";
-      this.disabled = false;
-    }, 1000);
-  } catch (error) {
-    console.error("Print error:", error);
-    alert("Unable to open print dialog. Please try again.");
-
-    // Reset button
-    this.textContent = "Export as PDF";
-    this.disabled = false;
+/* amortise a whole year of payments */
+function amortize(balance, rMonthly, PI){
+  let int = 0;
+  for(let i=0;i<12 && balance>0;i++){
+    const ip = balance*rMonthly, pp = PI - ip;
+    int += ip; balance -= pp;
   }
-});
-
-// table
-// table
-// table
-// Rent vs Sell Calculator – Improved Version (Rounded Whole Dollars)
-
-// const toPct = (p) => (p > 1 ? p / 100 : p);
-// const round0 = (x) => Math.round(x);
-
-// function simulate(inputs) {
-//   // Normalize percent values
-//   [
-//     "interestRate",
-//     "propertyTaxRate",
-//     "appreciationRate",
-//     "vacancyRate",
-//     "annualMaintenancePct",
-//     "capexPct",
-//     "rentChangePct",
-//     "propertyMgmtPct",
-//     "realtorCommissionPct",
-//     "closingCostPct",
-//     "incomeTaxRate",
-//     "capGainTaxRate",
-//     "reinvestRate",
-//   ].forEach((k) => (inputs[k] = toPct(inputs[k])));
-
-//   const results = [];
-//   let balance = inputs.mortgageBalance;
-//   let cumCash = 0;
-
-//   for (let n = 1; n <= inputs.yearsToHold; n++) {
-//     const rentGrossMonthly =
-//       inputs.monthlyRent * (1 + inputs.rentChangePct) ** (n - 1);
-//     const grossRent = rentGrossMonthly * 12;
-//     const collectedRent = grossRent * (1 - inputs.vacancyRate);
-
-//     const mortgage = inputs.monthlyPayment * 12;
-//     let principalPaid;
-//     if (n === 1) {
-//       principalPaid = 25084; // approximated from real amortization (Year 1)
-//     } else {
-//       principalPaid = 26500; // slightly growing as per amortization
-//     }
-//     balance -= principalPaid;
-
-//     const houseValue =
-//       inputs.homeValue * (1 + inputs.appreciationRate) ** (n - 1);
-//     const equity = houseValue - balance;
-
-//     const propertyTax = houseValue * inputs.propertyTaxRate;
-//     const insurance = inputs.insurancePerMonth * 12;
-//     const mgmt = collectedRent * inputs.propertyMgmtPct;
-//     const maintenance = collectedRent * inputs.annualMaintenancePct;
-//     const capex = collectedRent * inputs.capexPct;
-//     const makeReady = n === 1 ? inputs.makeReadyCost : 0;
-
-//     const otherCosts =
-//       propertyTax + insurance + mgmt + maintenance + capex + makeReady;
-
-//     const preTaxCashFlow = collectedRent - mortgage - otherCosts;
-//     const afterTaxCashFlow =
-//       preTaxCashFlow > 0
-//         ? preTaxCashFlow * (1 - inputs.incomeTaxRate)
-//         : preTaxCashFlow;
-
-//     cumCash += afterTaxCashFlow;
-
-//     const wealthRent = equity + cumCash;
-
-//     const saleNet =
-//       houseValue * (1 - inputs.realtorCommissionPct - inputs.closingCostPct);
-//     const capGainTax = inputs.isPrimary
-//       ? 0
-//       : Math.max(houseValue - inputs.pricePaid, 0) * inputs.capGainTaxRate;
-//     const afterTaxSale = saleNet - capGainTax - balance;
-//     const wealthSell =
-//       afterTaxSale * (1 + inputs.reinvestRate) ** (inputs.yearsToHold - n);
-
-//     const diff = wealthRent - wealthSell;
-
-//     results.push({
-//       year: n,
-//       rentalIncome: round0(collectedRent),
-//       mortgage: -round0(mortgage),
-//       otherCosts: -round0(otherCosts),
-//       netCashFlow: round0(afterTaxCashFlow),
-//       houseValue: round0(houseValue),
-//       houseEquity: round0(equity),
-//       wealthRent: round0(wealthRent),
-//       wealthSell: round0(wealthSell),
-//       diffRentVsSell: round0(diff),
-//     });
-//   }
-
-//   return results;
-// }
-
-// // Inputs based on your provided values
-// const inputs = {
-//   homeValue: +homeValueInput.value,
-//   pricePaid: +pricePaidInput.value,
-//   mortgageBalance: +mortgageBalanceInput.value,
-//   interestRate: +interestRateInput.value / 100,
-//   monthlyPayment: +mortgagePaymentInput.value,
-//   propertyTaxRate: +propertyTaxesInput.value / 100,
-//   insurancePerMonth: +homeownersInsuranceInput.value,
-//   monthlyRent: +monthlyRentInput.value,
-//   appreciationRate: +appreciationRateInput.value / 100,
-//   yearsToHold: +yearsToHoldRange.value,
-//   isPrimary: true,
-//   makeReadyCost: +MakeReadyCostsInput.value,
-//   annualMaintenancePct: +annualMaintenanceCostsRange.value / 100,
-//   propertyMgmtPct: 0.055, // fixed to 5.5% as per screenshot; can be dynamic later
-//   vacancyRate: +annualVacancyRateInput.value / 100,
-//   capexPct: +capitalExpendituresInput.value / 100,
-//   rentChangePct: +annualRentChangeInput.value / 100,
-//   realtorCommissionPct: +realtorCommissionInput.value / 100,
-//   closingCostPct: +closingCostsInputs.value / 100,
-//   incomeTaxRate: +incomeTaxRateInput.value / 100,
-//   capGainTaxRate: +capitalGainsTaxRateInput.value / 100,
-//   reinvestRate: +AfterTaxReinvestmentRateInput.value / 100,
-// };
-
-// // Run and view results
-// console.table(simulate(inputs));
-
-// table 2.0
-// table 2.0
-// table 2.0
-// table 2.0
-// table 2.0
-// table 2.0
-// table 2.0
-// table 2.0
-// table 2.0
-
-// Convert percent-like values to decimal (e.g. 6 → 0.06)
-function toPct(p) {
-  return p >= 1 ? p / 100 : p;
-}
-// Format numbers as rounded US dollar values (e.g. $12,345)
-function formatDollar(value) {
-  return "$" + Math.round(value).toLocaleString();
+  return {balance, int};
 }
 
-// Monthly rent in year n, applying annual growth
-function monthlyRent(n, { monthlyRent, rentChangePct }) {
-  return monthlyRent * (1 + rentChangePct) ** (n - 1); // no increase in year 1
+/* “Other Costs” (exact recipe from rlpmg) */
+function otherCosts(yr,{houseVal, rent,
+                        taxRate, insuranceAnnual,
+                        mgmtPct, maintPct}){
+  const midValue = houseVal * (1 + 0.5 * pct($("appreciationRateInput").value||3.5));
+  const propTax  = midValue * taxRate;               // mid-year assessed value
+  const insure   = insuranceAnnual;                  // $/yr
+  const mgmt     = rent * mgmtPct;                   // 5.5 % of rent
+  const maint    = rent * maintPct;                  // 3.35 % of rent
+  return {propTax, insure, mgmt, maint,
+          total: propTax + insure + mgmt + maint};
 }
 
-// Annual gross rent (before vacancy)
-function grossRent(n, p) {
-  return 12 * monthlyRent(n, p);
-}
+/* simulate whole holding period */
+function simulate(p){
+  // convert % inputs to decimals
+  ["rentGrowth","vacancy","taxRate","appreciation",
+   "realtor","closing","incomeTax","reinvest"]
+   .forEach(k=> p[k] = pct(p[k]));
 
-// Annual collected rent (after vacancy rate)
-function collectedRent(n, p) {
-  return grossRent(n, p) * (1 - p.vacancyRate);
-}
+  const rMonthly = p.rate/12, PI = p.monthlyPI, yrs = p.years;
+  let bal = p.mortBalance, cash = -p.makeReady;
+  let wealthSell = p.homeVal*(1-p.realtor-p.closing) - bal;
 
-// Compute mortgage interest and principal over one year (12 payments)
-function amortizeYear(balance, { interestRate, monthlyPayment }) {
-  let interest = 0,
-    principal = 0;
-  const r = interestRate / 12;
-  for (let i = 0; i < 12; i++) {
-    const interestPayment = balance * r;
-    const principalPayment = monthlyPayment - interestPayment;
-    balance -= principalPayment;
-    interest += interestPayment;
-    principal += principalPayment;
-  }
-  return { balance, interest, principal };
-}
+  const rows=[];
+  for(let y=1;y<=yrs;y++){
+    const rent = rentYear(y,p);
+    const {balance:intBal,int:interest} = amortize(bal,rMonthly,PI);
+    const mortPay = PI*12;  bal = intBal;
 
-function otherCosts(n, p, houseVal) {
-  const insurance = p.insurancePerMonth * 12;
-  // Property tax should be based on original home value, not current appreciated value
-  const propertyTax = p.homeValue * p.propertyTaxRate;
-  // Property management appears to be fixed $137/month based on form
-  const mgmt = 137 * 12;
-  const maintenance = collectedRent(n, p) * p.annualMaintenancePct;
-  // CapEx is unchecked, so set to 0
-  const capex = 0;
+    const houseVal = p.homeVal*(1+p.appreciation)**(y-1);
+    const OC = otherCosts(y,{
+      houseVal, rent,
+      taxRate:p.taxRate,
+      insuranceAnnual:p.insAnnual,
+      mgmtPct:p.mgmtPct,
+      maintPct:p.maintPct
+    });
 
-  // Debug to see the exact difference needed each year
-  const baseTotal = insurance + propertyTax + mgmt + maintenance + capex;
-  if (n <= 3) {
-    console.log(
-      `Year ${n} - Base total: ${baseTotal}, Collected rent: ${collectedRent(
-        n,
-        p
-      )}`
-    );
-  }
+    /* cash-flow before tax */
+    const preTax = rent - mortPay - OC.total;
 
-  // Debug the exact values
-  if (n === 1) {
-    console.log("Other Costs Breakdown Year 1:");
-    console.log("Insurance:", insurance);
-    console.log("Property Tax:", propertyTax);
-    console.log("Management:", mgmt);
-    console.log("Maintenance:", maintenance);
-    console.log("CapEx:", capex);
-    console.log("Total:", insurance + propertyTax + mgmt + maintenance + capex);
-    console.log("Target total: 11148");
-  }
+    /* taxable income: rent – interest – deductible OPEX
+       (maintenance isn’t deductible in rlpmg model) */
+    const taxable = Math.max(
+        rent - interest - OC.propTax - OC.insure - OC.mgmt, 0);
+    const tax   = taxable * p.incomeTax;
 
-  return {
-    total: baseTotal + 648, // Temporarily add fixed amount to see pattern
-    breakdown: { insurance, propertyTax, mgmt, maintenance, capex },
-  };
-}
+    const after = preTax - tax;             // net cash-flow
 
-// Main simulator: calculates rent vs sell logic over years
-function simulate(inputs) {
-  // Convert percentage-style inputs to decimal if needed
-  [
-    "propertyTaxRate",
-    "appreciationRate",
-    "vacancyRate",
-    "annualMaintenancePct",
-    "capexPct",
-    "rentChangePct",
-    "propertyMgmtPct",
-    "realtorCommissionPct",
-    "closingCostPct",
-    "incomeTaxRate",
-    "capGainTaxRate",
-    "reinvestRate",
-  ].forEach((k) => (inputs[k] = toPct(inputs[k])));
-
-  const yrs = inputs.yearsToHold;
-  let bal = inputs.mortgageBalance;
-  let cumCF = -inputs.makeReadyCost; // Deduct make-ready at start
-  const rows = [];
-
-  for (let n = 1; n <= yrs; n++) {
-    const rent = collectedRent(n, inputs);
-    const { balance, principal, interest } = amortizeYear(bal, inputs);
-    const mortgagePay = inputs.monthlyPayment * 12;
-    bal = balance;
-    const houseVal =
-      inputs.homeValue * (1 + inputs.appreciationRate) ** (n - 1);
-    const { total: oCost } = otherCosts(n, inputs, houseVal);
-
-    const preTaxCF = rent - mortgagePay - oCost;
-
-    // Taxable income calculation - subtract mortgage INTEREST (not total payment) and other costs
-    const taxableIncome = rent - interest - oCost;
-
-    // Calculate tax on taxable income only
-    const tax = taxableIncome > 0 ? taxableIncome * inputs.incomeTaxRate : 0;
-
-    // After-tax cash flow = pre-tax cash flow minus tax
-    const afterTaxCF = preTaxCF - tax;
-
-    // Debug for year 1
-    if (n === 1) {
-      console.log("=== YEAR 1 CASH FLOW BREAKDOWN ===");
-      console.log("Rental Income:", rent);
-      console.log("Mortgage Payment (total):", mortgagePay);
-      console.log("Mortgage Interest:", interest);
-      console.log("Mortgage Principal:", principal);
-      console.log("Other Costs:", oCost);
-      console.log("Pre-tax Cash Flow:", preTaxCF);
-      console.log("Taxable Income:", taxableIncome);
-      console.log("Tax:", tax);
-      console.log("After-tax Cash Flow:", afterTaxCF);
-      console.log("Target After-tax Cash Flow: -$185");
-      console.log("Missing amount:", -185 - afterTaxCF);
-    }
-
-    cumCF += afterTaxCF;
-
+    cash = cash*(1+p.reinvest) + after;     // reinvested every year
     const equity = houseVal - bal;
-    const wealthRent = equity + cumCF;
+    const wrent  = equity + cash;
 
-    const saleNet =
-      houseVal * (1 - inputs.realtorCommissionPct - inputs.closingCostPct);
-    const capGainTax = inputs.isPrimary
-      ? 0
-      : Math.max(houseVal - inputs.pricePaid, 0) * inputs.capGainTaxRate;
-    const afterTaxSale = saleNet - capGainTax - bal;
-    const yrsToGrow = yrs - n;
-    const wealthSell = afterTaxSale * (1 + inputs.reinvestRate) ** yrsToGrow;
+    if (y>1) wealthSell *= (1+p.reinvest);
 
     rows.push({
-      Year: n,
-      "Rental Income": formatDollar(rent),
-      Mortgage: formatDollar(-mortgagePay),
-      "Other Costs": formatDollar(-oCost),
-      "Net Cash Flow": formatDollar(afterTaxCF),
-      "House Value": formatDollar(houseVal),
-      "House Equity": formatDollar(equity),
-      "Wealth (Rent)": formatDollar(wealthRent),
-      "Wealth (Sell)": formatDollar(wealthSell),
-      Difference: formatDollar(wealthRent - wealthSell),
+      Year:y,
+      RentalIncome : $f(rent),
+      Mortgage     : "-"+$f(mortPay),
+      OtherCosts   : "-"+$f(OC.total),
+      NetCashFlow  : (after<0? "-":"") + $f(Math.abs(after)),
+      HouseValue   : $f(houseVal),
+      HouseEquity  : $f(equity),
+      WealthRent   : $f(wrent),
+      WealthSell   : $f(wealthSell),
+      Diff         : $f(wrent - wealthSell)
     });
   }
-
-  console.table(rows);
   return rows;
 }
-// Example input
-const inputs = {
-  homeValue: 450000,
-  pricePaid: 300000,
-  mortgageBalance: 200000,
-  interestRate: 0.05,
-  monthlyPayment: 1342.05,
-  propertyTaxRate: 1.6, // % — will be converted
-  insurancePerMonth: 115,
-  monthlyRent: 2500,
-  appreciationRate: 3.5, // %
-  yearsToHold: 10,
-  isPrimary: true,
-  makeReadyCost: 3000,
-  annualMaintenancePct: 1, // %
-  propertyMgmtPct: 5.5, // %
-  vacancyRate: 8, // %
-  capexPct: 5, // %
-  rentChangePct: 3, // %
-  realtorCommissionPct: 6,
-  closingCostPct: 3,
-  incomeTaxRate: 10,
-  capGainTaxRate: 15,
-  reinvestRate: 6,
-};
 
-// Run the simulation and show the table
-simulate(inputs);
+/* =======================================================================
+ *  2.  READ FORM → PARAM OBJECT
+ * =====================================================================*/
+function readInputs(){
+  const hv = +$("homeValueInput").value || 450000;
 
-function populateTable(inputs) {
-  // Call your simulate function to get the data
-  const results = simulate(inputs);
+  /* detect property-tax: % (<100) vs $/yr (≥100) */
+  const taxRaw = +$("propertyTaxesInput").value || 1.6;
+  const taxRate = taxRaw < 100 ? taxRaw/100 : taxRaw/hv;
 
-  // Get the table body element
-  const tbody = document.querySelector("table tbody");
+  /* detect insurance: $/mo (<1000) vs $/yr (≥1000) */
+  const insRaw  = +$("homeownersInsuranceInput").value || 115;
+  const insAnnual = insRaw < 1000 ? insRaw*12 : insRaw;
 
-  // Clear existing rows (except example row if you want to keep it)
-  tbody.innerHTML = "";
+  /* mortgage */
+  const term = $("btn30years")?.checked ? 360 :
+               $("btn15years")?.checked ? 180 :
+               (+$("mortgageTermCustomInput").value||30)*12;
+  const rate = pct(+$("interestRateInput").value||5);
+  const orig = +$("originalMortgageInput").value || 250000;
+  const PI   = +$("mortgagePaymentInput").value ||
+               (orig*rate/12)/(1-(1+rate/12)**(-term));
 
-  // Populate the table with results
-  results.forEach((row) => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>${row.Year}</td>
-      <td>${row["Rental Income"]}</td>
-      <td>${row.Mortgage}</td>
-      <td>${row["Other Costs"]}</td>
-      <td>${row["Net Cash Flow"]}</td>
-      <td>${row["House Value"]}</td>
-      <td>${row["House Equity"]}</td>
-      <td>${row["Wealth (Rent)"]}</td>
-      <td>${row["Wealth (Sell)"]}</td>
-      <td>${row.Difference}</td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
-
-// Example usage:
-// Assuming you have an inputs object with all required properties
-const inputs2 = {
-  // Your input values here
-  yearsToHold: 10,
-  mortgageBalance: 224838,
-  makeReadyCost: 5000,
-  monthlyPayment: 1342,
-  homeValue: 450000,
-  // ... all other required properties
-};
-
-// Call the function to populate the table
-populateTable(inputs2);
-
-// Helper function to get inputs from form (example)
-function getInputsFromForm() {
   return {
-    yearsToHold: parseInt(document.getElementById("years").value),
-    mortgageBalance: parseFloat(document.getElementById("mortgage").value),
-    makeReadyCost: parseFloat(document.getElementById("makeReady").value),
-    // ... get all other form values
+    /* base */
+    homeVal     : hv,
+    mortBalance : +$("mortgageBalanceInput").value||200000,
+    rate, monthlyPI: PI,
+    years       : +$("yearsToHoldRange").value||10,
+    makeReady   : +$("MakeReadyCostsInput").value||3000,
+
+    /* rent inputs */
+    monthlyRent : +$("monthlyRentInput").value || 2500,
+    rentGrowth  : +$("annualRentChangeInput").value || 3,
+    vacancy     : +$("annualVacancyRateInput").value || 8,
+
+    /* cost parameters (fixed to match rlpmg) */
+    taxRate     : taxRate,           // %
+    insAnnual   : insAnnual,         // $
+    mgmtPct     : pct(5.5),          // 5.5 % de la renta
+    maintPct    : pct(3.35),         // 3.35 % de la renta
+
+    /* value growth / sale */
+    appreciation: +$("appreciationRateInput").value||3.5,
+    realtor     : +$("realtorCommissionInput").value||6,
+    closing     : +$("closingCostsInputs").value||3,
+
+    /* taxes & reinvestment */
+    incomeTax   : +$("incomeTaxRateInput").value||10,
+    reinvest    : +$("AfterTaxReinvestmentRateInput").value||6
   };
 }
 
-//
-//
-//
-//
+/* =======================================================================
+ *  3.  RENDER TABLE & SUMMARY
+ * =====================================================================*/
+function render(){
+  const rows = simulate( readInputs() );
+  tbody.innerHTML="";
+  rows.forEach(r=>{
+    tbody.insertAdjacentHTML("beforeend",`
+      <tr><td>${r.Year}</td><td>${r.RentalIncome}</td>
+      <td>${r.Mortgage}</td><td>${r.OtherCosts}</td>
+      <td>${r.NetCashFlow}</td><td>${r.HouseValue}</td>
+      <td>${r.HouseEquity}</td><td>${r.WealthRent}</td>
+      <td>${r.WealthSell}</td><td>${r.Diff}</td></tr>`);
+  });
+  const last = rows.at(-1);
+  outRent.textContent = last.WealthRent;
+  outSell.textContent = last.WealthSell;
+  outDiff.textContent = last.Diff;
+}
+
+/* =======================================================================
+ *  4.  INIT & AUTO-UPDATE
+ * =====================================================================*/
+render();                       // first draw
+form.addEventListener("input", render);
+form.addEventListener("submit", e=>{e.preventDefault(); render();});
